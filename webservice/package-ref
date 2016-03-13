@@ -1,0 +1,11 @@
+npm install -g express-generator
+npm install -g supervisor
+npm install -g node-inpector
+
+ npm install -g pm2
+
+ npm install -g forever
+
+ npm install --save mongoose
+
+ npm install --seve-dev mocha
