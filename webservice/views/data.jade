@@ -12,9 +12,38 @@ block scripts
             var socket = io('http://localhost:3000');
 
             var hand = {left:0, right:0 };
+            
+            var chart = c3.generate({
+                bindto: '#chart',
+                data: {
+                columns: [ 
+                           ['left', hand.left ],
+                           ['right',hand.right ] 
+                         ],
+                        type: 'bar'
+                },
+                bar:{
+                    width:{ ratio:1}
+                },
+                tooltip:{
+                    format:{
+                        title:function(x){ return 'Datos' }
+                    }
+                },
+                axis:{
+                    y: {
+                        label:'numero de deteciones'
+                    },
+                    x: {
+                        show:true,
+                         label:'manos usadas' 
+                    }
+                }
+
+            });
 
             socket.on('ready', function (data) {
-                console.log(data);
+                //console.log(data);
                 socket.emit('cytlon', { cmd:'start' });
             });
 
@@ -25,18 +54,15 @@ block scripts
                 }else{
                     hand.right++;
                 }
-                console.log(hand);
-
-                var chart = c3.generate({
-                    bindto: '#chart',
-                    data: {
+                //console.log(hand);
+                
+                chart.load({ 
                     columns: [ 
-                               ['left', hand.left ],
-                               ['right',hand.right ] 
-                             ],
-                            type: 'bar'
-                    }
+                                ['left', hand.left ],
+                                ['right',hand.right ] 
+                             ]
                 });
+                
             });  
         };
 
