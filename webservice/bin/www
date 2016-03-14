@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-
 /**
  * Module dependencies.
  */
 
 var app = require('../app');
+var service = require('../routes/socket.js');
 var debug = require('debug')('webservice:server');
 var http = require('http');
 
@@ -20,7 +20,8 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-
+var io = require('socket.io')(server);
+service(io);
 /**
  * Listen on provided port, on all network interfaces.
  */

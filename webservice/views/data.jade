@@ -1,5 +1,47 @@
 extends layout
 
+block scripts
+    link(href="/c3/c3.css" rel="stylesheet" type="text/css")
+
+    script(src="/c3/c3.js")
+    script(src="/d3/d3.js")
+
+    script(src="/socket.io/socket.io.js")
+    script(type='text/javascript').
+        var handler= function(){
+            var socket = io('http://localhost:3000');
+
+            var hand = {left:0, right:0 };
+
+            socket.on('ready', function (data) {
+                console.log(data);
+                socket.emit('cytlon', { cmd:'start' });
+            });
+
+            socket.on('hand', function (data) {
+
+                if(data.data.hand=='left'){
+                    hand.left++;
+                }else{
+                    hand.right++;
+                }
+                console.log(hand);
+
+                var chart = c3.generate({
+                    bindto: '#chart',
+                    data: {
+                    columns: [ 
+                               ['left', hand.left ],
+                               ['right',hand.right ] 
+                             ],
+                            type: 'bar'
+                    }
+                });
+            });  
+        };
+
+        $(document).ready(handler);
+
 block content
   
   section(class="container")
@@ -7,25 +49,4 @@ block content
         div(class="col s12")
             h1 datos
             div(class="divider")
-            table(class="striped centered responsive-table")
-                thead
-                    tr
-                        th hand
-                        th pvx
-                        th pvy
-                        th pvz
-                        th spx
-                        th spy
-                        th spz
-                tbody
-                    each item in collections
-                     tr
-                        td= item.hand
-
-                        td= item.palm_velocity[0]
-                        td= item.palm_velocity[1]
-                        td= item.palm_velocity[2]
-
-                        td= item.sphere_center[0]
-                        td= item.sphere_center[1]
-                        td= item.sphere_center[2]
+            div(id="chart")

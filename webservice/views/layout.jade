@@ -2,9 +2,10 @@ doctype html
 html
   head
     title= title
-    
+    script(src="/jquery/dist/jquery.js")
     link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js')
+    block scripts
 
   body
     block content
