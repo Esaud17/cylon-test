@@ -5,11 +5,28 @@ var leads = require('../collections/lead');
 
 
 var service = function(io){
+	var divice = leads.model('dive_ledmotion',leads);
 
 	io.on('connection', function (socket) {
-  		socket.emit('ready', { msj: 'server socket on' });
-  		
+		
+		divice.find({hand:'left'}).count().exec(function(err,left){
+			if(err){
+				console.log(err);
+			}
+			else{
+				divice.find({hand:'right'}).count().exec(function(err,right){
+					if(err){
+						console.log(err);
+					}
+					else{
+						socket.emit('ready',{left:left, right:right});
+					}	
+				});
+			}	
+		});
+
   		socket.on('cytlon', function (data) {
+    		
     		Cylon.robot({
 
 				  connections: {
@@ -35,17 +52,25 @@ var service = function(io){
 				     	sphere_center:payload.palmVelocity, 
 				     };
 
-				     var divice = new leads(data_divice);
+				    var rdivice = new leads(data_divice);
 
-				     divice.save(function(error,data){
-							if(error){
-								//console.log(error);
-							}else{
-								//console.log(data);
-								socket.emit('hand', { data:data });
+				    rdivice.save(function(error,data){});
+
+				 	divice.find({hand:'left'}).count().exec(function(err,left){
+							if(err){
+								//console.log(err);
 							}
-					});
-
+							else{
+								divice.find({hand:'right'}).count().exec(function(err,right){
+									if(err){
+										//console.log(err);
+									}
+									else{
+										socket.emit('char',{left:left, right:right });
+									}	
+								});
+							}	
+						});
 
 				    });
 

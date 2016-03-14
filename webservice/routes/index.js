@@ -12,18 +12,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.get("/data", function(req, res, next){
-	var divice = leads.model('dive_ledmotion',leads);
-
-	divice.find({ }).exec(function(err,col){
-		if(err){
-			console.log(err);
-			res.send(404);
-		}
-		else{
-			res.render('data',{ collections:col });
-		}	
-	});
 	
+	res.render('data',{});
 });
 
 
